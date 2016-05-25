@@ -1,0 +1,6 @@
+*.pyc
+*.pyo
+__pycache__
+myvenv
+db.sqlite3
+settings.py
