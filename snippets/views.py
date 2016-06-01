@@ -1,12 +1,15 @@
 from django.shortcuts import render,HttpResponse
 
+from django.utils import timezone
+import datetime
 # Create your views here.
 
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
-from .models import Snippets
+from .models import Snippets,SnippetsComments
 from .serializers import SnippetSerializer
+from django.db import connection, transaction
 
 class JSONResponse(HttpResponse):
     """
@@ -68,6 +71,9 @@ def snippets_Details(request,pk):
 
 
 
+def snippets_detaillist(request):
+    overall=Snippets.objects.filter(created__gte=timezone.now()-datetime.timedelta(days=1)).order_by('-created')
+    return render(request,"snippets/snippets.html",{'overall':overall})
 
 
 

@@ -1,0 +1,17 @@
+{% extends 'snippets/sample.html' %}
+
+{% block head %}
+<title>Here you will find the Snippets details</title>
+{% endblock %}
+
+
+{% block content %}
+<ul>
+    {% for data in overall %}
+        <li><i>Created : {{data.created}}</i></li>
+        <li>Title : {{data.title}}</li>
+        <li>Language : {{data.language}}</li>
+        <li>Style : {{data.style}}</li>
+    {% endfor %}
+</ul>
+{% endblock %}
