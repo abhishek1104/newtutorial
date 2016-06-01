@@ -1,0 +1,20 @@
+{% extends 'snippets/sample.html' %}
+
+{% block title %}
+<title>Snippets details with comments</title>
+{% endblock %}
+
+{% block content %}
+
+<ul>
+    {% for data in customdata %}
+
+    <li><i>Created : {{data.1}}</i></li>
+    <li>Title : {{data.2}}</li>
+    <li>Comment_Id : {{data.3}}</li>
+    <li>Comment : {{data.5}}</li>
+    <br/>    
+    {% endfor %}
+</ul>
+
+{% endblock %}

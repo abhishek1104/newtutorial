@@ -78,3 +78,12 @@ def snippets_detaillist(request):
 
 
 
+def SnipCmnts(request):
+    cursor = connection.cursor()
+    cursor.execute("""SELECT ss.id AS snippets_id,
+    ss.created,ss.title,ss.lineos,c.id AS comment_id,c.`comments` AS comment_text,
+    c.`created` AS comment_created,c.`published` AS comment_published
+     FROM `snippets_snippets` ss
+    JOIN `comment` c ON ss.`id`=c.`snippet_id`""")
+    customdata=cursor.fetchall()
+    return render(request,"snippets/with_comments.html",{'customdata':customdata})
