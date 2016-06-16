@@ -1,4 +1,4 @@
-from django.shortcuts import render,HttpResponse
+from django.shortcuts import render,HttpResponse,get_object_or_404
 
 from django.utils import timezone
 import datetime
@@ -87,3 +87,17 @@ def SnipCmnts(request):
     JOIN `comment` c ON ss.`id`=c.`snippet_id`""")
     customdata=cursor.fetchall()
     return render(request,"snippets/with_comments.html",{'customdata':customdata})
+
+
+def snippet_selectdetail(request,snippet_id):
+    snip=get_object_or_404(Snippets,pk=snippet_id)
+
+    try:
+        selected_comments=snip.comments.get(pk=request.POST['snippetscomments']) 
+        #entities fetching in snippetscomments model
+    except :
+        return render(request,'snippets/details.html',{'snip':snip,'error_message':'No Comment Exists!'})
+
+    else:
+        #return HttpResponse("Valid entry inserted !")
+        return render(request,'snippets/details.html',{'snip':snip,})

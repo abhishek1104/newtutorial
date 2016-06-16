@@ -26,6 +26,11 @@ class Snippets(models.Model):
     def recently_created(self):
         return self.created >= timezone.now() - datetime.timedelta(days=1)
 
+    recently_created.admin_order_field='created'
+    recently_created.boolean=True
+    recently_created.short_description = 'Created Recently?'
+
+
     class Meta:
         ordering = ('-created',)
 
@@ -46,8 +51,8 @@ class SnippetsComments(models.Model):
         db_table = 'comment'
 
 
-
     def __str__(self):
         return self.comments
+
 
 
