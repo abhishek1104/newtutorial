@@ -1,0 +1,10 @@
+{% extends 'snippets/sample.html' %}
+
+{% block content %}
+{{title}}
+    <h1>New Comment</h1>
+    <form method="POST">{% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Save</button>
+    </form>
+{% endblock %}

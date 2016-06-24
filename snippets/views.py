@@ -1,4 +1,4 @@
-from django.shortcuts import render,HttpResponse,get_object_or_404
+from django.shortcuts import render,HttpResponse,get_object_or_404,redirect
 
 from django.utils import timezone
 import datetime
@@ -10,6 +10,8 @@ from rest_framework.parsers import JSONParser
 from .models import Snippets,SnippetsComments
 from .serializers import SnippetSerializer
 from django.db import connection, transaction
+from .forms import CommentForm
+from django.contrib.auth.decorators import login_required
 
 class JSONResponse(HttpResponse):
     """
@@ -88,16 +90,62 @@ def SnipCmnts(request):
     customdata=cursor.fetchall()
     return render(request,"snippets/with_comments.html",{'customdata':customdata})
 
-
-def snippet_selectdetail(request,snippet_id):
+@login_required
+def snippet_selectdetail(request):
+    
+    """
     snip=get_object_or_404(Snippets,pk=snippet_id)
 
     try:
         selected_comments=snip.comments.get(pk=request.POST['snippetscomments']) 
         #entities fetching in snippetscomments model
     except :
-        return render(request,'snippets/details.html',{'snip':snip,'error_message':'No Comment Exists!'})
+        return render(request,'snippets/details.html',{'snip':snip,'error_message':'No Comment Selected!'})
 
     else:
         #return HttpResponse("Valid entry inserted !")
         return render(request,'snippets/details.html',{'snip':snip,})
+    """
+
+    title = 'Welcome'
+    if request.method == "POST":
+
+        #print request.POST
+        myform = CommentForm(request.POST)
+
+        if myform.is_valid():
+            instance = myform.save(commit=False)
+            instance.comments=myform.cleaned_data.get("comments")
+            instance.published=timezone.now()
+
+            instance.save()
+            print instance.comments
+            print instance.published
+            title='Thank You'
+            return redirect('snippet_main:new_comment_detail',comment_id=instance.pk)
+
+
+    else:
+        myform=CommentForm()
+
+    return render(request, 'snippets/details.html',{'form':myform,'title':title} )
+
+def new_comment_detail(request,comment_id):
+    cursor=connection.cursor()
+    qry="""SELECT c.id AS comment_id,ss.title AS snippet_title,
+    ss.CODE AS snippet_code,c.comments AS comment_data,c.published  FROM `comment` c
+    JOIN snippets_snippets ss ON c.snippet_id=ss.id
+    WHERE c.id={0}""".format(comment_id,)
+    cursor.execute(qry)
+    comment_data=cursor.fetchall()
+    return render(request,"snippets/new_comment.html",{'comment_data':comment_data})
+
+
+            
+
+
+
+
+
+
+

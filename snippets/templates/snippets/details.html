@@ -1,14 +1,21 @@
+{% comment %}
+
 <h1>Snippets Data is as following</h1>
 {% if error_message %}<p><strong>{{error_message}}</p></strong>{% endif %}
 
+ {{snip.id}}   
+snippet is :{{snip}} </br>
+{{snip.comments.all}}
 
-<form action= "{% url 'snippet_main:snippet_selectdetail' snippet_id=snip %}" method="POST">
-{% csrf_token %}
-{% for comment in snippets.snippetscomments__set.all %}
-<input type='text' name="Comments" id="comment {{forloop.counter}}" value="{{comment.id}}" />
-<label for ="comment {{forloop.counter}}">{{comment.comments}}</label></br/>
-{% endfor %}
-<input type='submit' value="comment" />
 
+{% endcomment %}
+
+{{title}}
+
+<form method='POST' type=''>{% csrf_token %} {% comment %} No method specified goes to get {% endcomment %}
+
+{{form.as_p}}
+
+<input type='submit' value='comment' />
 
 </form>

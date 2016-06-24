@@ -1,0 +1,18 @@
+{% extends 'snippets/sample.html' %}
+
+{% block content %}
+{{comment_data}}
+{{comment_data.comment_id}}
+<ui>
+    {% for data in comment_data %}
+        <li>{{data}}</li>
+    <li><i>ID : {{data.0}}</i></li>
+    <li>Title : {{data.1}}</li>
+    <li>Snippet Code : {{data.2}}</li>
+    <li>Comment : {{data.3}}</li>
+    <li>Published : {{data.4}}</li>
+    <br/>
+    {% endfor %}
+
+</ui>
+{% endblock %}
